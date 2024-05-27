@@ -2,32 +2,34 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import Home from "./Pages/Home";
+import VerbWord from "./Pages/VerbWord";
+import VerbWordTable from "./Pages/VerbWordTable";
+import CountWord from "./Pages/CountWord";
+import CountWordTable from "./Pages/CountWordTable";
+import TimeWord from "./Pages/TimeWord";
+import TimeWordTable from "./Pages/TimeWordTable";
+import NounWord from "./Pages/NounWord";
+import NounWordTable from "./Pages/NounWordTable";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="App max-w-5xl mx-auto px-2">
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/VerbWord" element={<VerbWord />}></Route>
+          <Route path="/VerbWordTable" element={<VerbWordTable />}></Route>
+          <Route path="/CountWord" element={<CountWord />}></Route>
+          <Route path="/CountWordTable" element={<CountWordTable />}></Route>
+          <Route path="/TimeWord" element={<TimeWord />}></Route>
+          <Route path="/TimeWordTable" element={<TimeWordTable />}></Route>
+          <Route path="/NounWord" element={<NounWord />}></Route>
+          <Route path="/NounWordTable" element={<NounWordTable />}></Route>
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
