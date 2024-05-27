@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import WordData from "../../CountWordData.json";
+import WordData from "../Jsonfiles/CountWordData.json";
 import { useNavigate } from "react-router-dom";
 
 
@@ -40,7 +40,7 @@ export default function Word() {
   // 開始產題
   const StartGuessWord = () => {
     if (GuessIndex == AnswerIndex) {
-      alert("一樣是要猜三小");
+      alert("一樣是要猜殺毀");
       return null;
     }
 

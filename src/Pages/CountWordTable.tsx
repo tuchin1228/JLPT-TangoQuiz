@@ -1,5 +1,5 @@
 import React from "react";
-import WordData from "../../CountWordData.json";
+import WordData from "../Jsonfiles/CountWordData.json";
 import { useNavigate } from "react-router-dom";
 
 export default function WordTable() {

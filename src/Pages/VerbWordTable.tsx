@@ -1,5 +1,5 @@
 import React from "react";
-import WordData from "../../VerbWordData2.json";
+import WordData from "../Jsonfiles/VerbWordData2.json";
 import { useNavigate } from "react-router-dom";
 
 export default function WordTable() {
@@ -50,15 +50,15 @@ export default function WordTable() {
           <tbody>
             {WordData
               ? WordData.map((word, idx) => (
-                  <tr className={`${idx % 2 != 0 ? "bg-base-200" : ""}`}>
-                    <td className="text-xl font-semibold">{word.chi}</td>
-                    <td className="text-xl font-semibold">{word.kana}</td>
-                    <td className="text-xl font-semibold">
-                      {word.word ? word.word : ""}
-                    </td>
-                    <td className="text-xl font-semibold">{word.category}</td>
-                  </tr>
-                ))
+                <tr className={`${idx % 2 != 0 ? "bg-base-200" : ""}`}>
+                  <td className="text-xl font-semibold">{word.chi}</td>
+                  <td className="text-xl font-semibold">{word.kana}</td>
+                  <td className="text-xl font-semibold">
+                    {word.word ? word.word : ""}
+                  </td>
+                  <td className="text-xl font-semibold">{word.category}</td>
+                </tr>
+              ))
               : null}
             {/* row 1 */}
           </tbody>
