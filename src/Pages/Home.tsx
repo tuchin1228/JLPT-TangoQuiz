@@ -45,6 +45,12 @@ export default function Home() {
       >
         動詞練習
       </button>
+      <button
+        className="btn text-2xl py-2 btn-warning block my-4 text-center w-full"
+        onClick={() => navigate("/NewWord")}
+      >
+        新單字練習
+      </button>
     </div>
   );
 }

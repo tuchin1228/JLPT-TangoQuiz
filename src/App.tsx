@@ -11,6 +11,8 @@ import TimeWord from "./Pages/TimeWord";
 import TimeWordTable from "./Pages/TimeWordTable";
 import NounWord from "./Pages/NounWord";
 import NounWordTable from "./Pages/NounWordTable";
+import NewWord from "./Pages/NewWord";
+import NewWordTable from "./Pages/NewWordTable";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
           <Route path="/TimeWordTable" element={<TimeWordTable />}></Route>
           <Route path="/NounWord" element={<NounWord />}></Route>
           <Route path="/NounWordTable" element={<NounWordTable />}></Route>
+          <Route path="/NewWord" element={<NewWord />}></Route>
+          <Route path="/NewWordTable" element={<NewWordTable />}></Route>
         </Routes>
       </div>
     </>
