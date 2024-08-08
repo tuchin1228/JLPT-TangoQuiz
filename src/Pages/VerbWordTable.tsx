@@ -1,12 +1,8 @@
-import React from "react";
 import WordData from "../Jsonfiles/VerbWordData2.json";
 import { useNavigate } from "react-router-dom";
 
 export default function WordTable() {
   const navigate = useNavigate();
-  const GoWordTest = () => {
-    navigate("/");
-  };
   return (
     <div>
       <div className="overflow-x-auto ">

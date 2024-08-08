@@ -1,6 +1,3 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import Home from "./Pages/Home";
 import VerbWord from "./Pages/VerbWord";
@@ -13,7 +10,7 @@ import NounWord from "./Pages/NounWord";
 import NounWordTable from "./Pages/NounWordTable";
 import NewWord from "./Pages/NewWord";
 import NewWordTable from "./Pages/NewWordTable";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
 

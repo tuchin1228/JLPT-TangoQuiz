@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import WordData from "../Jsonfiles/VerbWordData2.json";
 import { useNavigate } from "react-router-dom";
 
