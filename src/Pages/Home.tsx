@@ -50,6 +50,12 @@ export default function Home() {
       >
         新單字練習
       </button>
+      <button
+        className="btn text-2xl py-2 btn-warning block my-4 text-center w-full"
+        onClick={() => navigate("/N4Word")}
+      >
+        N4單字練習
+      </button>
     </div>
   );
 }
