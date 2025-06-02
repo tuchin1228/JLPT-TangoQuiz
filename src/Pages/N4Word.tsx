@@ -30,6 +30,10 @@ export default function NewWord() {
   // 連續答對題數
   const [ContinueBingo, setContinueBingo] = useState<number>(0);
 
+  
+  // 每題複習
+  const [ReviewModel, setReviewModel] = useState<boolean>(false);
+
   useEffect(() => {
     setOptions([]);
     setAnswer(null);
@@ -139,23 +143,45 @@ export default function NewWord() {
   };
 
   // 檢查答案
-  const CheckAnswer = ({ option }: { option: WordDataType }) => {
+  // const CheckAnswer = ({ option }: { option: WordDataType }) => {
+  //   console.log("option", option);
+  //   console.log("Answer", Answer);
+  //   // 判斷 word、kana
+  //   if (option?.word == Answer?.word && option?.kana == Answer?.kana) {
+  //     // 答對
+  //     setBingo(null);
+  //     StartGuessWord();
+  //     setContinueBingo(ContinueBingo + 1);
+  //     return null;
+  //   }
+
+  //   // 答錯
+  //   setBingo(false);
+  //   setContinueBingo(0);
+  //   return null;
+  // };
+
+
+    // 檢查答案
+  const CheckAnswer =  ({ option }: { option: WordDataType }) => {
     console.log("option", option);
     console.log("Answer", Answer);
     // 判斷 word、kana
-    if (option?.word == Answer?.word && option?.kana == Answer?.kana) {
+    if (Answer && option?.word == Answer.word && option?.kana == Answer.kana) {
       // 答對
       setBingo(null);
-      StartGuessWord();
+      //   StartGuessWord();
       setContinueBingo(ContinueBingo + 1);
-      return null;
+    } else {
+      // 答錯
+      setBingo(false);
+      setContinueBingo(0);
     }
 
-    // 答錯
-    setBingo(false);
-    setContinueBingo(0);
+    setReviewModel(true);
     return null;
   };
+
 
   return (
     <div>
@@ -282,6 +308,48 @@ export default function NewWord() {
             ))}
           </div>
         ) : null}
+      </div>
+
+         {/* 複習視窗 */}
+      <div
+        className={`modal ${ReviewModel ? "modal-open" : ""}`}
+        // onClick={() => setReviewModel(false)}
+      >
+        <div
+          className="modal-box w-11/12 max-w-3xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 className="text-2xl font-bold">複習</h2>
+          <div className="text-4xl font-bold text-center p-5 border-2 border-gray-500">
+            {/* 排版 Options 內容 */}
+            {Options.map((option) => (
+              <div className="m-2 p-2 border-2 flex items-center justify-between">
+                <div className="text-xl text-center font-bold">
+                  {option.word} ({option.kana})
+                </div>
+                <div className="text-xl text-center font-bold">
+                  {option.chi}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div>
+            <p className="text-center text-red-600 text-2xl font-bold mt-4">
+              {Bingo == false ? "答錯!!" : "正確!!"}
+            </p>
+          </div>
+          <div className="text-center mt-4">
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                setReviewModel(false);
+                StartGuessWord();
+              }}
+            >
+              下一題
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
