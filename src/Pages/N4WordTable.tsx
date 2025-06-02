@@ -12,9 +12,9 @@ export default function NewWordTable() {
               <a onClick={() => navigate("/")}>首頁</a>
             </li>
             <li>
-              <a onClick={() => navigate("/CountWord")}>新單字測試</a>
+              <a onClick={() => navigate("/CountWord")}>N4單字測試</a>
             </li>
-            <li>新單字列表</li>
+            <li>N4單字列表</li>
           </ul>
         </div>
         <div role="alert" className="alert my-2">

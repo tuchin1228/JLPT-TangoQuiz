@@ -40,7 +40,7 @@ export default function NewWord() {
   // 開始產題
   const StartGuessWord = () => {
     if (GuessIndex == AnswerIndex) {
-      alert("一樣是要猜殺毀");
+      alert("禁止猜同一個欄位");
       return null;
     }
 
@@ -164,7 +164,7 @@ export default function NewWord() {
           <li>
             <a onClick={() => navigate("/")}>首頁</a>
           </li>
-          <li>新單字測試</li>
+          <li>N4單字測試</li>
         </ul>
       </div>
       <div className="text-right">
