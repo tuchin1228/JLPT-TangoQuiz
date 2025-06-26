@@ -12,7 +12,7 @@ export default function NewWordTable() {
               <a onClick={() => navigate("/")}>首頁</a>
             </li>
             <li>
-              <a onClick={() => navigate("/CountWord")}>N4單字測試</a>
+              <a onClick={() => navigate("/N3Word")}>N3單字測試</a>
             </li>
             <li>N3單字列表</li>
           </ul>
