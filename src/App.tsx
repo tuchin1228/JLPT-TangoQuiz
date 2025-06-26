@@ -12,6 +12,8 @@ import NewWord from "./Pages/NewWord";
 import NewWordTable from "./Pages/NewWordTable";
 import N4Word from "./Pages/N4Word";
 import N4WordTable from "./Pages/N4WordTable";
+import N3Word from "./Pages/N3Word";
+import N3WordTable from "./Pages/N3WordTable";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
@@ -33,6 +35,8 @@ function App() {
           <Route path="/NewWordTable" element={<NewWordTable />}></Route>
           <Route path="/N4Word" element={<N4Word />}></Route>
           <Route path="/N4WordTable" element={<N4WordTable />}></Route>
+          <Route path="/N3Word" element={<N3Word />}></Route>
+          <Route path="/N3WordTable" element={<N3WordTable />}></Route>
         </Routes>
       </div>
     </>
