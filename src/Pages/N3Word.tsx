@@ -29,7 +29,9 @@ export default function NewWord() {
   const [Bingo, setBingo] = useState<boolean | null>();
   // 連續答對題數
   const [ContinueBingo, setContinueBingo] = useState<number>(0);
-
+  // 新增起始和終點編號狀態
+  const [startIndex, setStartIndex] = useState<number>(1);
+  const [endIndex, setEndIndex] = useState<number>(WordDataCount);
   
   // 每題複習
   const [ReviewModel, setReviewModel] = useState<boolean>(false);
@@ -51,8 +53,23 @@ export default function NewWord() {
     // 從WordData的資料長度中，隨機產四個變數，此四個變數代表WordData資料的index，並將四個index的資料取出做為選項，並隨機使用一筆作為答案，如果GuessIndex或AnswerIndex為word，那麼要把該選項移除，並重新抽選補齊四個選項
     const getRandomIndexes = () => {
       const indexes: number[] = [];
+      // 修正計算方式，確保包含起點和終點編號
+      const validStart = Math.max(0, startIndex - 1);
+      const validEnd = Math.min(WordDataCount - 1, endIndex - 1);
+      
+      if (validStart > validEnd) {
+        alert("起始編號必須小於或等於終點編號");
+        return indexes;
+      }
+
+      const range = validEnd - validStart + 1;
+      if (range < 4) {
+        alert("選擇的範圍必須至少包含 4 個單字");
+        return indexes;
+      }
+
       while (indexes.length < 4) {
-        const randomIndex = Math.floor(Math.random() * WordDataCount);
+        const randomIndex = Math.floor(Math.random() * range) + validStart;
         if (!indexes.includes(randomIndex)) {
           indexes.push(randomIndex);
         }
@@ -283,6 +300,38 @@ export default function NewWord() {
           </div>
         </div>
       </div>
+      <div className="my-2 border-2 p-4 rounded-lg">
+        <h3>進階篩選</h3>
+        <div className="flex items-center gap-4">
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">起始編號 (1-{WordDataCount})</span>
+            </label>
+            <input
+              type="number"
+              min="1"
+              max={WordDataCount}
+              value={startIndex}
+              onChange={(e) => setStartIndex(Math.max(1, Math.min(parseInt(e.target.value) || 1, WordDataCount)))}
+              className="input input-bordered w-24"
+            />
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">終點編號 (1-{WordDataCount})</span>
+            </label>
+            <input
+              type="number"
+              min="1"
+              max={WordDataCount}
+              value={endIndex}
+              onChange={(e) => setEndIndex(Math.max(1, Math.min(parseInt(e.target.value) || 1, WordDataCount)))}
+              className="input input-bordered w-24"
+            />
+          </div>
+        </div>
+      </div>
+
       <div className="my-2 ">
         <button
           className="btn btn-warning w-full"

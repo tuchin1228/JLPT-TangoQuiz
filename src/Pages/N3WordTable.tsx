@@ -37,6 +37,7 @@ export default function NewWordTable() {
           {/* head */}
           <thead>
             <tr className="text-2xl font-bold bg-base-200">
+              <th>編號</th>
               <th>漢字</th>
               <th>假名</th>
               <th>中文</th>
@@ -45,14 +46,15 @@ export default function NewWordTable() {
           <tbody>
             {WordData
               ? WordData.map((word, idx) => (
-                  <tr className={`${idx % 2 != 0 ? "bg-base-200" : ""}`}>
-                    <td className="text-xl font-semibold">
-                      {word.word ? word.word : ""}
-                    </td>
-                    <td className="text-xl font-semibold">{word.kana}</td>
-                    <td className="text-xl font-semibold">{word.chi}</td>
-                  </tr>
-                ))
+                <tr className={`${idx % 2 != 0 ? "bg-base-200" : ""}`}>
+                  <td className="text-center">{idx + 1}</td>
+                  <td className="text-xl font-semibold">
+                    {word.word ? word.word : ""}
+                  </td>
+                  <td className="text-xl font-semibold">{word.kana}</td>
+                  <td className="text-xl font-semibold">{word.chi}</td>
+                </tr>
+              ))
               : null}
             {/* row 1 */}
           </tbody>
