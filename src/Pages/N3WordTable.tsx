@@ -1,16 +1,11 @@
 import WordData from "../Jsonfiles/N3Word.json";
 import { useNavigate } from "react-router-dom";
+import { useJapaneseTTS } from "../useJapaneseTTS";
 
 export default function NewWordTable() {
   const navigate = useNavigate();
+  const { speak } = useJapaneseTTS();
 
-  const speak = (text: string) => {
-    // 移除方括號中的音調標記（例如：）
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'ja-JP'; // 設定日語發音
-    utterance.rate = 1; // 語速稍微放慢
-    window.speechSynthesis.speak(utterance);
-  };
   return (
     <div>
       <div className="overflow-x-auto ">
