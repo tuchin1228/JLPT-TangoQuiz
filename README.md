@@ -2,6 +2,10 @@
 
 幫助記憶日文單字，順便練習 Typescript
 
+## 立即體驗
+
+🌐 [DEMO：https://japan-learn-nwvzjep2f-tuchin1228s-projects.vercel.app](https://japan-learn-nwvzjep2f-tuchin1228s-projects.vercel.app/)
+
 ## 功能特點
 
 - 支援多種單字類別（N3、N4、動詞、名詞等）
