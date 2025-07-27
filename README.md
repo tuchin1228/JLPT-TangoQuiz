@@ -4,7 +4,7 @@
 
 ## 立即體驗
 
-🌐 [DEMO：https://japan-learn-nwvzjep2f-tuchin1228s-projects.vercel.app](https://japan-learn-nwvzjep2f-tuchin1228s-projects.vercel.app/)
+🌐 [DEMO：https://japan-learn-ts.vercel.app/](https://japan-learn-ts.vercel.app/)
 
 ## 功能特點
 
