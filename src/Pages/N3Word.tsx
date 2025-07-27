@@ -8,6 +8,7 @@ interface WordDataType {
   word: string,
   kana: string,
   chi: string,
+  accent?: number | null,
 }
 
 export default function NewWord() {
@@ -108,12 +109,18 @@ export default function NewWord() {
     switch (AnswerIndex) {
       case "word":
         content = (
-          <div className="text-2xl text-center font-bold">{option.word}</div>
+          <div className="text-2xl text-center font-bold">
+            {option.word}
+            {option.accent != null && <span className="text-sm ml-1">[{option.accent}]</span>}
+          </div>
         );
         break;
       case "kana":
         content = (
-          <div className="text-2xl text-center font-bold">{option.kana}</div>
+          <div className="text-2xl text-center font-bold">
+            {option.kana}
+            {option.accent != null && <span className="text-sm ml-1">[{option.accent}]</span>}
+          </div>
         );
         break;
       case "chi":
@@ -123,7 +130,10 @@ export default function NewWord() {
         break;
       default:
         content = (
-          <div className="text-2xl text-center font-bold">{option.word}</div>
+          <div className="text-2xl text-center font-bold">
+            {option.word}
+            {option.accent != null && <span className="text-sm ml-1">[{option.accent}]</span>}
+          </div>
         );
     }
 
@@ -136,23 +146,22 @@ export default function NewWord() {
     if (Answer?.chi) {
       switch (GuessIndex) {
         case "word":
-          content = Answer.word;
+          content = Answer.word + (Answer.accent != null ? ` [${Answer.accent}]` : '');
           break;
         case "kana":
-          content = Answer.kana;
+          content = Answer.kana + (Answer.accent != null ? ` [${Answer.accent}]` : '');
           break;
         case "chi":
           content = Answer.chi;
           break;
         default:
-          content = Answer.word;
+          content = Answer.word + (Answer.accent != null ? ` [${Answer.accent}]` : '');
           break;
       }
     }
     return (
       <div
-        className={`text-4xl font-bold text-center p-5 border-2 ${Bingo == false ? "border-red-500" : "border-gray-500"
-          }`}
+        className={`text-4xl font-bold text-center p-5 border-2 `}
       >
         {content}
       </div>
@@ -335,7 +344,16 @@ export default function NewWord() {
       <div className="my-2 ">
         <button
           className="btn btn-warning w-full"
-          onClick={() => StartGuessWord()}
+          onClick={() => {
+            if (ContinueBingo > 0) {
+              if (window.confirm('重新刷題將會重置連續答對次數，確定要繼續嗎？')) {
+                setContinueBingo(0);
+                StartGuessWord();
+              }
+            } else {
+              StartGuessWord();
+            }
+          }}
         >
           開始刷題
         </button>
@@ -373,8 +391,22 @@ export default function NewWord() {
             {/* 排版 Options 內容 */}
             {Options.map((option) => (
               <div className="m-2 p-2 border-2 flex items-center justify-between">
-                <div className="text-xl text-center font-bold">
-                  {option.word} ({option.kana})
+                <div className="text-xl text-center font-bold flex items-center gap-4">
+                  <button
+                    onClick={() => {
+                      const utterance = new SpeechSynthesisUtterance(option.word);
+                      utterance.lang = 'ja-JP';
+                      utterance.rate = 1;
+                      window.speechSynthesis.speak(utterance);
+                    }}
+                    className="btn btn-circle btn-sm btn-ghost"
+                    title="播放發音"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                  </button>
+                  <span>{option.word}{option.accent != null && ` [${option.accent}]`} ({option.kana}{option.accent != null && ` [${option.accent}]`})</span>
                 </div>
                 <div className="text-xl text-center font-bold">
                   {option.chi}

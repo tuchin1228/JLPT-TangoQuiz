@@ -8,6 +8,7 @@ interface WordDataType {
   word: string,
   kana: string,
   chi: string,
+  accent?: number | null,
 }
 
 export default function NewWord() {
@@ -29,7 +30,9 @@ export default function NewWord() {
   const [Bingo, setBingo] = useState<boolean | null>();
   // 連續答對題數
   const [ContinueBingo, setContinueBingo] = useState<number>(0);
-
+  // 新增起始和終點編號狀態
+  const [startIndex, setStartIndex] = useState<number>(1);
+  const [endIndex, setEndIndex] = useState<number>(WordDataCount);
   
   // 每題複習
   const [ReviewModel, setReviewModel] = useState<boolean>(false);
@@ -51,8 +54,23 @@ export default function NewWord() {
     // 從WordData的資料長度中，隨機產四個變數，此四個變數代表WordData資料的index，並將四個index的資料取出做為選項，並隨機使用一筆作為答案，如果GuessIndex或AnswerIndex為word，那麼要把該選項移除，並重新抽選補齊四個選項
     const getRandomIndexes = () => {
       const indexes: number[] = [];
+      // 修正計算方式，確保包含起點和終點編號
+      const validStart = Math.max(0, startIndex - 1);
+      const validEnd = Math.min(WordDataCount - 1, endIndex - 1);
+      
+      if (validStart > validEnd) {
+        alert("起始編號必須小於或等於終點編號");
+        return indexes;
+      }
+
+      const range = validEnd - validStart + 1;
+      if (range < 4) {
+        alert("選擇的範圍必須至少包含 4 個單字");
+        return indexes;
+      }
+
       while (indexes.length < 4) {
-        const randomIndex = Math.floor(Math.random() * WordDataCount);
+        const randomIndex = Math.floor(Math.random() * range) + validStart;
         if (!indexes.includes(randomIndex)) {
           indexes.push(randomIndex);
         }
@@ -91,12 +109,18 @@ export default function NewWord() {
     switch (AnswerIndex) {
       case "word":
         content = (
-          <div className="text-2xl text-center font-bold">{option.word}</div>
+          <div className="text-2xl text-center font-bold">
+            {option.word}
+            {option.accent != null && <span className="text-sm ml-1">[{option.accent}]</span>}
+          </div>
         );
         break;
       case "kana":
         content = (
-          <div className="text-2xl text-center font-bold">{option.kana}</div>
+          <div className="text-2xl text-center font-bold">
+            {option.kana}
+            {option.accent != null && <span className="text-sm ml-1">[{option.accent}]</span>}
+          </div>
         );
         break;
       case "chi":
@@ -106,7 +130,10 @@ export default function NewWord() {
         break;
       default:
         content = (
-          <div className="text-2xl text-center font-bold">{option.word}</div>
+          <div className="text-2xl text-center font-bold">
+            {option.word}
+            {option.accent != null && <span className="text-sm ml-1">[{option.accent}]</span>}
+          </div>
         );
     }
 
@@ -119,23 +146,22 @@ export default function NewWord() {
     if (Answer?.chi) {
       switch (GuessIndex) {
         case "word":
-          content = Answer.word;
+          content = Answer.word + (Answer.accent != null ? ` [${Answer.accent}]` : '');
           break;
         case "kana":
-          content = Answer.kana;
+          content = Answer.kana + (Answer.accent != null ? ` [${Answer.accent}]` : '');
           break;
         case "chi":
           content = Answer.chi;
           break;
         default:
-          content = Answer.word;
+          content = Answer.word + (Answer.accent != null ? ` [${Answer.accent}]` : '');
           break;
       }
     }
     return (
       <div
-        className={`text-4xl font-bold text-center p-5 border-2 ${Bingo == false ? "border-red-500" : "border-gray-500"
-          }`}
+        className={`text-4xl font-bold text-center p-5 border-2 `}
       >
         {content}
       </div>
@@ -283,10 +309,51 @@ export default function NewWord() {
           </div>
         </div>
       </div>
+      <div className="my-2 border-2 p-4 rounded-lg">
+        <h3>進階篩選</h3>
+        <div className="flex items-center gap-4">
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">起始編號 (1-{WordDataCount})</span>
+            </label>
+            <input
+              type="number"
+              min="1"
+              max={WordDataCount}
+              value={startIndex}
+              onChange={(e) => setStartIndex(Math.max(1, Math.min(parseInt(e.target.value) || 1, WordDataCount)))}
+              className="input input-bordered w-24"
+            />
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">終點編號 (1-{WordDataCount})</span>
+            </label>
+            <input
+              type="number"
+              min="1"
+              max={WordDataCount}
+              value={endIndex}
+              onChange={(e) => setEndIndex(Math.max(1, Math.min(parseInt(e.target.value) || 1, WordDataCount)))}
+              className="input input-bordered w-24"
+            />
+          </div>
+        </div>
+      </div>
+
       <div className="my-2 ">
         <button
           className="btn btn-warning w-full"
-          onClick={() => StartGuessWord()}
+          onClick={() => {
+            if (ContinueBingo > 0) {
+              if (window.confirm('重新刷題將會重置連續答對次數，確定要繼續嗎？')) {
+                setContinueBingo(0);
+                StartGuessWord();
+              }
+            } else {
+              StartGuessWord();
+            }
+          }}
         >
           開始刷題
         </button>
@@ -324,8 +391,22 @@ export default function NewWord() {
             {/* 排版 Options 內容 */}
             {Options.map((option) => (
               <div className="m-2 p-2 border-2 flex items-center justify-between">
-                <div className="text-xl text-center font-bold">
-                  {option.word} ({option.kana})
+                <div className="text-xl text-center font-bold flex items-center gap-4">
+                  <button
+                    onClick={() => {
+                      const utterance = new SpeechSynthesisUtterance(option.word);
+                      utterance.lang = 'ja-JP';
+                      utterance.rate = 1;
+                      window.speechSynthesis.speak(utterance);
+                    }}
+                    className="btn btn-circle btn-sm btn-ghost"
+                    title="播放發音"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                  </button>
+                  <span>{option.word}{option.accent != null && ` [${option.accent}]`} ({option.kana}{option.accent != null && ` [${option.accent}]`})</span>
                 </div>
                 <div className="text-xl text-center font-bold">
                   {option.chi}
