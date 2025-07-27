@@ -1,7 +1,7 @@
-import WordData from "../Jsonfiles/VerbWordData2.json";
+import WordData from "../Jsonfiles/N5Word.json";
 import { useNavigate } from "react-router-dom";
 
-export default function WordTable() {
+export default function NewWordTable() {
   const navigate = useNavigate();
   return (
     <div>
@@ -12,9 +12,9 @@ export default function WordTable() {
               <a onClick={() => navigate("/")}>首頁</a>
             </li>
             <li>
-              <a onClick={() => navigate("/TimeWord")}>動詞測試</a>
+              <a onClick={() => navigate("/N5Word")}>N5單字測試</a>
             </li>
-            <li>動詞列表</li>
+            <li>N5單字列表</li>
           </ul>
         </div>
         <div role="alert" className="alert my-2">
@@ -37,22 +37,22 @@ export default function WordTable() {
           {/* head */}
           <thead>
             <tr className="text-2xl font-bold bg-base-200">
-              <th>中文</th>
-              <th>假名</th>
+              <th>編號</th>
               <th>漢字</th>
-              <th>幾類</th>
+              <th>假名</th>
+              <th>中文</th>
             </tr>
           </thead>
           <tbody>
             {WordData
               ? WordData.map((word, idx) => (
                 <tr className={`${idx % 2 != 0 ? "bg-base-200" : ""}`}>
-                  <td className="text-xl font-semibold">{word.chi}</td>
-                  <td className="text-xl font-semibold">{word.kana}</td>
+                  <td className="text-center">{idx + 1}</td>
                   <td className="text-xl font-semibold">
                     {word.word ? word.word : ""}
                   </td>
-                  <td className="text-xl font-semibold">{word.category}</td>
+                  <td className="text-xl font-semibold">{word.kana}</td>
+                  <td className="text-xl font-semibold">{word.chi}</td>
                 </tr>
               ))
               : null}

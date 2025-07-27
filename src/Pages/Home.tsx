@@ -20,35 +20,12 @@ export default function Home() {
         </svg>
         <span>選擇練習內容</span>
       </div>
+
       <button
         className="btn text-2xl py-2 btn-warning block my-4 text-center w-full"
-        onClick={() => navigate("/NounWord")}
+        onClick={() => navigate("/N5Word")}
       >
-        名詞練習
-      </button>
-      <button
-        className="btn text-2xl py-2 btn-warning block my-4 text-center w-full"
-        onClick={() => navigate("/CountWord")}
-      >
-        數量名詞練習
-      </button>
-      <button
-        className="btn text-2xl py-2 btn-warning block my-4 text-center w-full"
-        onClick={() => navigate("/TimeWord")}
-      >
-        時間名詞練習
-      </button>
-      <button
-        className="btn text-2xl py-2 btn-warning block my-4 text-center w-full"
-        onClick={() => navigate("/VerbWord")}
-      >
-        動詞練習
-      </button>
-      <button
-        className="btn text-2xl py-2 btn-warning block my-4 text-center w-full"
-        onClick={() => navigate("/NewWord")}
-      >
-        新單字練習
+        N5單字練習
       </button>
       <button
         className="btn text-2xl py-2 btn-warning block my-4 text-center w-full"
@@ -56,7 +33,7 @@ export default function Home() {
       >
         N4單字練習
       </button>
-           <button
+      <button
         className="btn text-2xl py-2 btn-warning block my-4 text-center w-full"
         onClick={() => navigate("/N3Word")}
       >
