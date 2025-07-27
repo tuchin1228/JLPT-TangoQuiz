@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import WordData from "../Jsonfiles/N3Word.json";
 import { useNavigate } from "react-router-dom";
-
+import { useJapaneseTTS } from "../useJapaneseTTS";
 
 
 interface WordDataType {
@@ -13,6 +13,8 @@ interface WordDataType {
 
 export default function NewWord() {
   const navigate = useNavigate();
+  const { speak } = useJapaneseTTS();
+
   const GoWordTable = () => {
     navigate("/N3WordTable");
   };
@@ -394,10 +396,7 @@ export default function NewWord() {
                 <div className="text-xl text-center font-bold flex items-center gap-4">
                   <button
                     onClick={() => {
-                      const utterance = new SpeechSynthesisUtterance(option.word);
-                      utterance.lang = 'ja-JP';
-                      utterance.rate = 1;
-                      window.speechSynthesis.speak(utterance);
+                      speak(option.word);
                     }}
                     className="btn btn-circle btn-sm btn-ghost"
                     title="播放發音"
