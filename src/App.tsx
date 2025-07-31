@@ -7,12 +7,14 @@ import N4WordTable from "./Pages/N4WordTable";
 import N3Word from "./Pages/N3Word";
 import N3WordTable from "./Pages/N3WordTable";
 import { Routes, Route } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
 
   return (
     <>
       <div className="App max-w-5xl mx-auto px-2">
+        <Analytics /> 
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/N5Word" element={<N5Word />}></Route>
