@@ -3,6 +3,9 @@ import WordData from "../Jsonfiles/N3Word.json";
 import { useNavigate } from "react-router-dom";
 import { useJapaneseTTS } from "../useJapaneseTTS";
 
+// LocalStorage key 常數
+const FAVORITE_WORDS_KEY = "favoriteWordsN3";
+
 
 interface WordDataType {
   word: string,
@@ -14,9 +17,28 @@ interface WordDataType {
 export default function NewWord() {
   const navigate = useNavigate();
   const { speak } = useJapaneseTTS();
+  const [favoriteWords, setFavoriteWords] = useState<string[]>(() => {
+    const saved = localStorage.getItem(FAVORITE_WORDS_KEY);
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const GoWordTable = () => {
     navigate("/N3WordTable");
+  };
+
+  const GoFavoriteWordTable = () => {
+    navigate("/N3FavoriteWordTable");
+  };
+
+  // 處理收藏/取消收藏
+  const toggleFavorite = (word: string) => {
+    setFavoriteWords(prev => {
+      const newFavorites = prev.includes(word)
+        ? prev.filter(w => w !== word)
+        : [...prev, word];
+      localStorage.setItem(FAVORITE_WORDS_KEY, JSON.stringify(newFavorites));
+      return newFavorites;
+    });
   };
 
   const WordDataCount = WordData.length;
@@ -35,7 +57,7 @@ export default function NewWord() {
   // 新增起始和終點編號狀態
   const [startIndex, setStartIndex] = useState<number>(1);
   const [endIndex, setEndIndex] = useState<number>(WordDataCount);
-  
+
   // 每題複習
   const [ReviewModel, setReviewModel] = useState<boolean>(false);
 
@@ -59,7 +81,7 @@ export default function NewWord() {
       // 修正計算方式，確保包含起點和終點編號
       const validStart = Math.max(0, startIndex - 1);
       const validEnd = Math.min(WordDataCount - 1, endIndex - 1);
-      
+
       if (validStart > validEnd) {
         alert("起始編號必須小於或等於終點編號");
         return indexes;
@@ -190,8 +212,8 @@ export default function NewWord() {
   // };
 
 
-    // 檢查答案
-  const CheckAnswer =  ({ option }: { option: WordDataType }) => {
+  // 檢查答案
+  const CheckAnswer = ({ option }: { option: WordDataType }) => {
     console.log("option", option);
     console.log("Answer", Answer);
     // 判斷 word、kana
@@ -222,8 +244,11 @@ export default function NewWord() {
         </ul>
       </div>
       <div className="text-right">
-        <button className="btn btn-warning" onClick={() => GoWordTable()}>
+        <button className="btn btn-warning ml-1" onClick={() => GoWordTable()}>
           N3單字
+        </button>
+        <button className="btn btn-warning ml-1" onClick={() => GoFavoriteWordTable()}>
+          收藏單字
         </button>
       </div>
       <div className="my-2 border-2 p-4 rounded-lg">
@@ -379,10 +404,10 @@ export default function NewWord() {
         ) : null}
       </div>
 
-         {/* 複習視窗 */}
+      {/* 複習視窗 */}
       <div
         className={`modal ${ReviewModel ? "modal-open" : ""}`}
-        // onClick={() => setReviewModel(false)}
+      // onClick={() => setReviewModel(false)}
       >
         <div
           className="modal-box w-11/12 max-w-3xl"
@@ -407,8 +432,30 @@ export default function NewWord() {
                   </button>
                   <span>{option.word}{option.accent != null && ` [${option.accent}]`} ({option.kana}{option.accent != null && ` [${option.accent}]`})</span>
                 </div>
-                <div className="text-xl text-center font-bold">
-                  {option.chi}
+                <div className="flex items-center gap-4">
+                  <div className="text-xl text-center font-bold">
+                    {option.chi}
+                  </div>
+                  <button
+                    onClick={() => toggleFavorite(option.word)}
+                    className="btn btn-circle btn-sm btn-ghost"
+                    title={favoriteWords.includes(option.word) ? "取消收藏" : "加入收藏"}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill={favoriteWords.includes(option.word) ? "currentColor" : "none"}
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
             ))}
