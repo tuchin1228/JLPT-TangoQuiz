@@ -75,6 +75,12 @@ export default function NewWord() {
       return null;
     }
 
+    // 播放發音模式下，不允許選項也是播放發音
+    if (GuessIndex == "sound" && AnswerIndex == "sound") {
+      alert("播放發音模式下，選項不能也是播放發音");
+      return null;
+    }
+
     // 從WordData的資料長度中，隨機產四個變數，此四個變數代表WordData資料的index，並將四個index的資料取出做為選項，並隨機使用一筆作為答案，如果GuessIndex或AnswerIndex為word，那麼要把該選項移除，並重新抽選補齊四個選項
     const getRandomIndexes = () => {
       const indexes: number[] = [];
@@ -125,6 +131,13 @@ export default function NewWord() {
 
     setOptions(options);
     setAnswer(answer);
+
+    // 如果是播放發音模式，自動播放一次
+    if (GuessIndex === "sound" && answer?.word) {
+      setTimeout(() => {
+        speak(answer.word);
+      }, 500); // 延遲 500ms 讓狀態更新完成
+    }
   };
 
   //選項渲染
@@ -166,6 +179,31 @@ export default function NewWord() {
 
   // 題目渲染
   const GuessAreaTemplate = () => {
+    if (GuessIndex === "sound") {
+      // 播放發音模式：只顯示播放按鈕
+      return (
+        <div className="text-center p-5 border-2">
+          <div className="text-lg mb-4"></div>
+          <button
+            onClick={() => {
+              if (Answer?.word) {
+                speak(Answer.word);
+              }
+            }}
+            className="btn btn-primary btn-lg mr-2"
+            disabled={!Answer}
+            title="播放發音"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            </svg>
+            播放發音
+          </button>
+        </div>
+      );
+    }
+
+    // 其他模式：顯示文字
     let content = "點擊按鈕出題";
     if (Answer?.chi) {
       switch (GuessIndex) {
@@ -291,6 +329,19 @@ export default function NewWord() {
                 checked={GuessIndex == "chi"}
               />
               <span className="label-text  mx-2">中文</span>
+            </label>
+          </div>
+          <div className="form-control mx-2">
+            <label className="label cursor-pointer">
+              <input
+                type="radio"
+                name="Guess"
+                id="GuessSound"
+                className="radio  "
+                onChange={() => setGuessIndex("sound")}
+                checked={GuessIndex == "sound"}
+              />
+              <span className="label-text  mx-2">播放發音</span>
             </label>
           </div>
         </div>
