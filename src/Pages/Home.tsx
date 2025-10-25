@@ -62,7 +62,15 @@ export default function Home() {
           <span className="text-5xl font-extrabold mb-2 text-yellow-500 group-hover:text-yellow-600 transition-colors duration-200">N3</span>
           <span className="text-lg font-bold text-gray-700  tracking-wide">單字練習</span>
         </button>
+        <button
+          className="aspect-square rounded-xl border-2 border-gray-300 bg-white/80 hover:bg-purple-50 transition-all duration-300 flex flex-col items-center justify-center shadow-sm hover:shadow-md group relative overflow-hidden"
+          onClick={() => navigate("/OnomatopeWord")}
+        >
+          <span className="text-5xl font-extrabold mb-2 text-purple-500 group-hover:text-purple-600 transition-colors duration-200">擬聲詞</span>
+          <span className="text-lg font-bold text-gray-700  tracking-wide">擬聲擬態詞練習</span>
+        </button>
       </div>
+
     </div>
   );
 }
