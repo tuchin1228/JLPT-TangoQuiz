@@ -58,11 +58,31 @@ export function useJapaneseTTS(): JapaneseTTSHook {
       synth.cancel(); // 清空佇列，避免多段重疊播放
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "ja-JP";
-      utterance.voice = jaVoice;
-      utterance.rate = 1;
+      // 等待語音載入完成
+      const setVoice = () => {
+        const voices = speechSynthesis.getVoices();
+        const googleJapanese = voices.find(voice =>
+          voice.name === 'Google 日本語' && voice.lang === 'ja-JP'
+        );
 
-      synth.speak(utterance);
+        if (googleJapanese) {
+          utterance.voice = googleJapanese;
+          utterance.lang = 'ja-JP';
+          utterance.rate = 1.0;  // 固定語速
+          utterance.pitch = 1.0; // 固定音調
+          utterance.volume = 1.0; // 固定音量
+          speechSynthesis.speak(utterance);
+        } else {
+          console.error('找不到 Google 日本語語音');
+        }
+      };
+
+      // 語音列表可能需要時間載入
+      if (speechSynthesis.getVoices().length > 0) {
+        setVoice();
+      } else {
+        speechSynthesis.onvoiceschanged = setVoice;
+      }
     },
     [ready, synth]
   );
