@@ -58,6 +58,9 @@ export default function NewWord() {
   const [startIndex, setStartIndex] = useState<number>(1);
   const [endIndex, setEndIndex] = useState<number>(WordDataCount);
 
+  // 收藏單字過濾器
+  const [favoriteOnly, setFavoriteOnly] = useState<boolean>(false);
+
   // 每題複習
   const [ReviewModel, setReviewModel] = useState<boolean>(false);
 
@@ -66,7 +69,7 @@ export default function NewWord() {
     setAnswer(null);
     setBingo(null);
     setContinueBingo(0);
-  }, [GuessIndex, AnswerIndex]);
+  }, [GuessIndex, AnswerIndex, favoriteOnly]);
 
   // 開始產題
   const StartGuessWord = () => {
@@ -81,30 +84,62 @@ export default function NewWord() {
       return null;
     }
 
+    // 檢查收藏單字模式
+    if (favoriteOnly) {
+      if (favoriteWords.length < 4) {
+        alert("收藏單字至少需要 4 個才能進行測試");
+        return null;
+      }
+    }
+
     // 從WordData的資料長度中，隨機產四個變數，此四個變數代表WordData資料的index，並將四個index的資料取出做為選項，並隨機使用一筆作為答案，如果GuessIndex或AnswerIndex為word，那麼要把該選項移除，並重新抽選補齊四個選項
     const getRandomIndexes = () => {
       const indexes: number[] = [];
-      // 修正計算方式，確保包含起點和終點編號
-      const validStart = Math.max(0, startIndex - 1);
-      const validEnd = Math.min(WordDataCount - 1, endIndex - 1);
+      
+      if (favoriteOnly) {
+        // 收藏單字模式：只從收藏的單字中抽取
+        const favoriteIndexes: number[] = [];
+        WordData.forEach((word, index) => {
+          if (favoriteWords.includes(word.word)) {
+            favoriteIndexes.push(index);
+          }
+        });
 
-      if (validStart > validEnd) {
-        alert("起始編號必須小於或等於終點編號");
-        return indexes;
-      }
+        if (favoriteIndexes.length < 4) {
+          alert("收藏單字至少需要 4 個才能進行測試");
+          return indexes;
+        }
 
-      const range = validEnd - validStart + 1;
-      if (range < 4) {
-        alert("選擇的範圍必須至少包含 4 個單字");
-        return indexes;
-      }
+        while (indexes.length < 4) {
+          const randomIndex = favoriteIndexes[Math.floor(Math.random() * favoriteIndexes.length)];
+          if (!indexes.includes(randomIndex)) {
+            indexes.push(randomIndex);
+          }
+        }
+      } else {
+        // 範圍模式：從指定範圍中抽取
+        const validStart = Math.max(0, startIndex - 1);
+        const validEnd = Math.min(WordDataCount - 1, endIndex - 1);
 
-      while (indexes.length < 4) {
-        const randomIndex = Math.floor(Math.random() * range) + validStart;
-        if (!indexes.includes(randomIndex)) {
-          indexes.push(randomIndex);
+        if (validStart > validEnd) {
+          alert("起始編號必須小於或等於終點編號");
+          return indexes;
+        }
+
+        const range = validEnd - validStart + 1;
+        if (range < 4) {
+          alert("選擇的範圍必須至少包含 4 個單字");
+          return indexes;
+        }
+
+        while (indexes.length < 4) {
+          const randomIndex = Math.floor(Math.random() * range) + validStart;
+          if (!indexes.includes(randomIndex)) {
+            indexes.push(randomIndex);
+          }
         }
       }
+      
       return indexes;
     };
     let randomIndexes: number[] = [];
@@ -389,34 +424,55 @@ export default function NewWord() {
       </div>
       <div className="my-2 border-2 p-4 rounded-lg">
         <h3>進階篩選</h3>
-        <div className="flex items-center gap-4">
+        <div className="mb-4">
           <div className="form-control">
-            <label className="label">
-              <span className="label-text">起始編號 (1-{WordDataCount})</span>
+            <label className="label cursor-pointer justify-start">
+              <input
+                type="checkbox"
+                className="checkbox mr-2"
+                checked={favoriteOnly}
+                onChange={(e) => setFavoriteOnly(e.target.checked)}
+              />
+              <span className="label-text">只出現收藏單字 ({favoriteWords.length} 個)</span>
             </label>
-            <input
-              type="number"
-              min="1"
-              max={WordDataCount}
-              value={startIndex}
-              onChange={(e) => setStartIndex(Math.max(1, Math.min(parseInt(e.target.value) || 1, WordDataCount)))}
-              className="input input-bordered w-24"
-            />
           </div>
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">終點編號 (1-{WordDataCount})</span>
-            </label>
-            <input
-              type="number"
-              min="1"
-              max={WordDataCount}
-              value={endIndex}
-              onChange={(e) => setEndIndex(Math.max(1, Math.min(parseInt(e.target.value) || 1, WordDataCount)))}
-              className="input input-bordered w-24"
-            />
-          </div>
+          {favoriteOnly && favoriteWords.length < 4 && (
+            <div className="text-red-500 text-sm mt-1">
+              ⚠️ 收藏單字至少需要 4 個才能進行測試
+            </div>
+          )}
         </div>
+        
+        {!favoriteOnly && (
+          <div className="flex items-center gap-4">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">起始編號 (1-{WordDataCount})</span>
+              </label>
+              <input
+                type="number"
+                min="1"
+                max={WordDataCount}
+                value={startIndex}
+                onChange={(e) => setStartIndex(Math.max(1, Math.min(parseInt(e.target.value) || 1, WordDataCount)))}
+                className="input input-bordered w-24"
+              />
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">終點編號 (1-{WordDataCount})</span>
+              </label>
+              <input
+                type="number"
+                min="1"
+                max={WordDataCount}
+                value={endIndex}
+                onChange={(e) => setEndIndex(Math.max(1, Math.min(parseInt(e.target.value) || 1, WordDataCount)))}
+                className="input input-bordered w-24"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="my-2 ">
